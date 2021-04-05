@@ -9,7 +9,8 @@ import "net/http"
 
 type Master struct {
 	// Your definitions here.
-
+	id int
+	tasks [][]string
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -22,6 +23,18 @@ type Master struct {
 func (m *Master) Example(args *ExampleArgs, reply *ExampleReply) error {
 	reply.Y = args.X + 1
 	return nil
+}
+
+// Regsiter Handler
+func (m *Master) RegisterHandler(args *RegisterArgs, reply *RegisterReply) error {
+	reply.WorkerId = m.id
+	m.id += 1
+	return nil
+}
+
+// Task Request Handler
+func (m *Master) TaskRequestHandler(args *RegisterArgs, reply *RegisterReply) error {
+
 }
 
 
@@ -63,7 +76,6 @@ func MakeMaster(files []string, nReduce int) *Master {
 	m := Master{}
 
 	// Your code here.
-
 
 	m.server()
 	return &m

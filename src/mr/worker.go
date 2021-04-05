@@ -14,6 +14,12 @@ type KeyValue struct {
 	Value string
 }
 
+// worker struct
+type worker struct {
+	id int
+
+}
+
 //
 // use ihash(key) % NReduce to choose the reduce
 // task number for each KeyValue emitted by Map.
@@ -32,6 +38,8 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
+	w := worker{}
+	w.callForRegister()
 
 	// uncomment to send the Example RPC to the master.
 	// CallExample()
@@ -59,6 +67,21 @@ func CallExample() {
 
 	// reply.Y should be 100.
 	fmt.Printf("reply.Y %v\n", reply.Y)
+}
+
+// Function to call for registering to master and get a unique worker id
+func (w *worker) callForRegister() {
+	args := RegisterArgs{}
+	reply := RegisterReply{}
+	call("Master.RegisterHandler", &args, &reply)
+	w.id = reply.WorkerId
+}
+
+// Function to call for asking master for a task
+func (w *worker) callForTask() {
+	args := TaskReqArgs{}
+	reply := TaskReqReply{}
+	call()
 }
 
 //
